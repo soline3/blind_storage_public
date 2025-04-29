@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <title> Blind Storage 
+    </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script src="/static/jv/serveur.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/serveur.css') }}">
+  </head>
+
+  <body>
+  
+    <div class="content">
+      <header>
+        <div class="header-background"></div>
+        <div class="title">
+          <h1>
+            Blind Storage
+          </h1>
+        </div>
+      </header>
+      
+      <main>
+        <div class="chartContainer">
+        </div>
+      </main>  
+
+      <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Choisir un fichier :</label>
+        <input type="file" id="file" name="file">
+        <input type="submit" value="Téléverser">
+    </form>
+    <div id="status"></div>
+    
+    <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        
+        let fileInput = document.getElementById("file");
+        if (fileInput.files.length === 0) {
+            document.getElementById("status").innerHTML = "Aucun fichier sélectionné.";
+            return;
+        }
+    
+        let file = fileInput.files[0];
+        let formData = new FormData();
+        formData.append("file", file);
+    
+        let response = await fetch('/upload', { 
+            method: 'POST',
+            body: formData
+        });
+    
+        let result = await response.json();
+        document.getElementById("status").innerHTML = result.message;
+    });
+    </script>
+    
+
+    </div>
+    
+  </body>
+  
+</html>

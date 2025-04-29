@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/serveur.css') }}">
+    <title>Téléverser un fichier</title>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('upload_file') }}">Téléverser un fichier</a></li>
+            <li><a href="{{ url_for('files') }}">Mes fichiers</a></li>
+            <li><a href="{{ url_for('shared_files') }}">Fichiers partagés</a></li>
+            <li><a href="{{ url_for('logout') }}">Déconnexion</a></li> 
+        </ul>
+    </nav>
+    
+    <h1>Téléverser un fichier</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <label for="file">Choisissez un fichier :</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Téléverser</button>
+    </form>
+    
+    <script>
+    document.getElementById('upload-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+    
+        const formData = new FormData();
+        const fileInput = document.getElementById('file');
+        formData.append('file', fileInput.files[0]);
+    
+        try {
+            const response = await fetch('{{ url_for("upload_file") }}', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                alert(`Succès, votre fichier a bien été téléversé : ${result.url}`);
+            } else {
+                alert(`Erreur : ${result.error}`);
+            }
+        } catch (error) {
+            alert(`Erreur de connexion : ${error}`);
+        }
+    });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/serveur.css') }}">
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('upload_file') }}">Téléverser un fichier</a></li>
+        <li><a href="{{ url_for('files') }}">Mes fichiers</a></li>
+        <li><a href="{{ url_for('shared_files') }}">Fichiers partagés</a></li>
+        <li><a href="{{ url_for('logout') }}">Déconnexion</a></li> 
+    </ul>
+</nav>
+
+<div class="content">
+    <h1>Bienvenue, {{ name }} !</h1>
+    <p>Vous pouvez partager vos fichiers directement ici</p>
+
+    <input type="text" id="file_name" placeholder="Nom du fichier">
+    <input type="text" id="share_with" placeholder="Nom d'utilisateur">
+    <button onclick="shareFile()">Partager</button>
+</div>
+
+<script>
+function shareFile() {
+    let fileName = document.getElementById("file_name").value;
+    let shareWith = document.getElementById("share_with").value;
+
+    if (!fileName || !shareWith) {
+        alert("Veuillez remplir les deux champs.");
+        return;
+    }
+
+    fetch("/share", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ fichier: fileName, shared_with: shareWith })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Erreur serveur");
+        return response.json();
+    })
+    .then(data => alert(data.message))
+    .catch(error => console.error("Erreur:", error));
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Inscription</title></head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/serveur.css') }}">
+<body>
+<h1>Inscription</h1>
+<form method="POST" action="{{ url_for('register') }}">
+    <label for="username">Nom d'utilisateur :</label>
+    <input type="text" name="username" required>
+    <label for="password">Mot de passe :</label>
+    <input type="password" name="password" required>
+    <button type="submit">S'inscrire</button>
+</form>
+<p>Déjà inscrit ? <a href="{{ url_for('login') }}">Connectez-vous ici</a></p>
+</body>
+</html>
